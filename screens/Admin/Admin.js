@@ -2,16 +2,22 @@ import React from 'react';
 import { createDrawerNavigator, createAppContainer } from 'react-navigation';
 import { Text } from 'native-base';
 import Parts from './Parts/Parts';
+import Assemblies from './Assemblies/Assemblies';
 
 const dev = true;
 
-const appNavigator = createDrawerNavigator({
-    Parts: Parts,
-    Assemblies: () => <Text>Assemblies</Text>,
-    'Work Stations': () => <Text>Work Stations</Text>,
-    Jobs: () => <Text>Jobs</Text>,
-    Employees: () => <Text>Employees</Text>
-})
+const appNavigator = createDrawerNavigator(
+    {
+        Parts: Parts,
+        Assemblies: Assemblies,
+        'Work Stations': () => <Text>Work Stations</Text>,
+        Jobs: () => <Text>Jobs</Text>,
+        Employees: () => <Text>Employees</Text>
+    },
+    {
+        initialRouteName: 'Assemblies'
+    }
+)
 
 const AppContainer = createAppContainer(appNavigator);
 
@@ -40,7 +46,7 @@ export default class Admin extends React.Component {
     }
 
     render() {
-        if(!this.state.appIsReady){
+        if (!this.state.appIsReady) {
             return <Text>...Loading App...</Text>
         }
 
