@@ -2,6 +2,7 @@ import React from 'react';
 import Axios from 'axios';
 import { View, Picker } from 'react-native';
 import { Container, Form, Input, Button, Item, Label, Text, Card, CardItem } from 'native-base';
+import { NavigationEvents } from 'react-navigation';
 
 export default class CreateParts extends React.Component {
     constructor(props) {
@@ -10,22 +11,10 @@ export default class CreateParts extends React.Component {
             selectedStation: null,
             stations: null,
             partName: null,
-            partAttachment: null,
+            partAttachment: 'No file',
             partStations: null,
             err: null,
         }
-    }
-
-    componentWillMount = () => {
-        Axios.get('https://project-runner-f1bdc.firebaseapp.com/api/v1/stations/all')
-            .then(result => {
-                if (result.data.err) {
-                    this.setState({ err: result.data.err })
-                    return;
-                }
-                this.setState({ stations: result.data, selectedStation: result.data[0] });
-            })
-            .catch(err => this.setState({ err }))
     }
 
     handlePickerChange = index => {
@@ -66,7 +55,7 @@ export default class CreateParts extends React.Component {
                 name: this.state.partName,
                 filename: 'No File',
                 stations: this.state.partStations,
-                
+
             }
         })
             .then(result => {
@@ -81,9 +70,28 @@ export default class CreateParts extends React.Component {
 
     }
 
+    handleRefresh = () => {
+        Axios.get('https://project-runner-f1bdc.firebaseapp.com/api/v1/stations/all')
+            .then(result => {
+                if (result.data.err) {
+                    this.setState({ err: result.data.err })
+                    return;
+                }
+                this.setState({ stations: result.data, selectedStation: result.data[0] });
+            })
+            .catch(err => this.setState({ err }))
+
+        if (this.props.navigation.state.params) {
+            //Add edit function here. Beware! DO NOT OVERWRITE EXISTING FILE ATTACHMENT!!!
+        }
+    }
+
     render() {
         return (
             <Container style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+                <NavigationEvents
+                    onWillFocus={this.handleRefresh}
+                />
                 <View style={{ flex: 1 }} />
                 <Form style={{ flex: 6 }}>
                     <Item>

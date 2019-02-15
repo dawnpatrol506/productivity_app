@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { Text } from 'native-base';
+import { Text, Root } from 'native-base';
 import Login from './screens/Login/Login';
 import Admin from './screens/Admin/Admin';
 
@@ -14,8 +14,12 @@ const AppNavigator = createStackNavigator({
 
 const AppContainer = createAppContainer(AppNavigator);
 
-export default class App extends React.Component{
-  render(){
-    return <AppContainer />
+export default class App extends React.Component {
+  render() {
+    return (
+      <Root>
+        <AppContainer />
+      </Root>
+    )
   }
 }
