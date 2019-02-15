@@ -4,9 +4,10 @@ import { Text } from 'native-base';
 import Login from './screens/Login/Login';
 import Admin from './screens/Admin/Admin';
 
+const dev = true;
 
 const AppNavigator = createStackNavigator({
-  Login: Login,
+  Login: dev ? Admin : Login,
   Admin: Admin,
   Employee: () => <Text>Employee</Text>
 })

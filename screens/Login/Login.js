@@ -3,8 +3,6 @@ import { Container, Content, Item, Label, Input, Button, Form, H1, Text } from '
 import { View, AsyncStorage } from 'react-native';
 import Axios from 'axios';
 
-const dev = false;
-
 export default class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -26,8 +24,6 @@ export default class Login extends React.Component {
     static navigationOptions = { title: "Login" }
 
     handleSubmit = () => {
-        if(dev)
-            this.props.navigation.navigate('Admin');
 
         this.setState({ err: null })
         Axios.post('https://project-runner-f1bdc.firebaseapp.com/api/v1/auth/login', {
@@ -40,16 +36,20 @@ export default class Login extends React.Component {
                     return;
                 }
 
-                AsyncStorage.setItem('uid', result.data.uid);
-                AsyncStorage.setItem('token', result.token);
-                AsyncStorage.setItem('name', result.name);
-                AsyncStorage.setItem('isAdmin', result.isAdmin);
+                AsyncStorage.setItem('name', result.data.name);
+
+                const params = {
+                    uid: result.data.uid,
+                    token: result.data.token,
+                    name: result.data.name,
+                    isAdmin: result.data.isAdmin
+                }
 
                 if (result.data.isAdmin === true) {
-                    this.props.navigation.navigate('Admin');
+                    this.props.navigation.navigate('Admin', { ...params });
                 }
                 else {
-                    this.props.navigation.navigate('Employee', {name: AsyncStorage.getItem('name')});
+                    this.props.navigation.navigate('Employee', { ...params });
                 }
             })
             .catch(err => this.setState({ err: err.message }))
